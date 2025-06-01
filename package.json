@@ -4,6 +4,7 @@
   "description": "A Chrome extension that provides AI-powered web page interaction similar to Copilot",
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf dist/",
     "build": "npm run build:dev",
     "build:dev": "webpack --mode development",
     "build:prod": "webpack --mode production",

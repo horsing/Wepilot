@@ -159,10 +159,11 @@ export class FloatingChat {
           </div>
         </div>
 
-        <!-- Resize Handles -->
+        <!-- Resize Handles (only visible when dialog is expanded) -->
+        <div class="wepilot-resize-handle left" data-resize="left"></div>
         <div class="wepilot-resize-handle right" data-resize="right"></div>
+        <div class="wepilot-resize-handle top" data-resize="top"></div>
         <div class="wepilot-resize-handle bottom" data-resize="bottom"></div>
-        <div class="wepilot-resize-handle bottom-right" data-resize="bottom-right"></div>
 
         <!-- Drag Handle -->
         <div class="wepilot-drag-handle" id="wepilot-drag-handle"></div>
@@ -255,7 +256,6 @@ export class FloatingChat {
         max-width: 0;
         transition: all 0.3s ease;
         overflow: hidden;
-        margin-left: 8px;
       }
 
       .wepilot-chat-button:hover .wepilot-chat-label {
@@ -621,44 +621,73 @@ export class FloatingChat {
         position: absolute;
         background: transparent;
         z-index: 11;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      /* Only show resize handles when dialog is visible */
+      .wepilot-chat-dialog.wepilot-visible .wepilot-resize-handle {
+        opacity: 1;
+      }
+
+      .wepilot-resize-handle.left {
+        top: 50%;
+        left: 0;
+        width: 8px;
+        height: 60px;
+        transform: translateY(-50%);
+        cursor: ew-resize;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 0 4px 4px 0;
+      }
+
+      .wepilot-resize-handle.left:hover {
+        background: rgba(59, 130, 246, 0.2);
       }
 
       .wepilot-resize-handle.right {
-        top: 0;
+        top: 50%;
         right: 0;
         width: 8px;
-        height: 100%;
+        height: 60px;
+        transform: translateY(-50%);
         cursor: ew-resize;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 4px 0 0 4px;
+      }
+
+      .wepilot-resize-handle.right:hover {
+        background: rgba(59, 130, 246, 0.2);
+      }
+
+      .wepilot-resize-handle.top {
+        top: 0;
+        left: 50%;
+        width: 60px;
+        height: 8px;
+        transform: translateX(-50%);
+        cursor: ns-resize;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 0 0 4px 4px;
+      }
+
+      .wepilot-resize-handle.top:hover {
+        background: rgba(59, 130, 246, 0.2);
       }
 
       .wepilot-resize-handle.bottom {
         bottom: 0;
-        left: 0;
-        width: 100%;
+        left: 50%;
+        width: 60px;
         height: 8px;
+        transform: translateX(-50%);
         cursor: ns-resize;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 4px 4px 0 0;
       }
 
-      .wepilot-resize-handle.bottom-right {
-        bottom: 0;
-        right: 0;
-        width: 16px;
-        height: 16px;
-        cursor: nw-resize;
-        background: linear-gradient(135deg, transparent 40%, #3b82f6 60%);
-        border-radius: 16px 0 16px 0;
-      }
-
-      .wepilot-resize-handle.bottom-right::after {
-        content: '';
-        position: absolute;
-        bottom: 2px;
-        right: 2px;
-        width: 6px;
-        height: 6px;
-        background: #3b82f6;
-        border-radius: 50%;
-        opacity: 0.6;
+      .wepilot-resize-handle.bottom:hover {
+        background: rgba(59, 130, 246, 0.2);
       }
 
       /* Typing Indicator */
@@ -884,14 +913,16 @@ export class FloatingChat {
           let newHeight = startHeight;
 
           switch (resizeType) {
+            case 'left':
+              newWidth = Math.max(300, Math.min(800, startWidth - deltaX));
+              break;
             case 'right':
               newWidth = Math.max(300, Math.min(800, startWidth + deltaX));
               break;
-            case 'bottom':
-              newHeight = Math.max(400, Math.min(800, startHeight + deltaY));
+            case 'top':
+              newHeight = Math.max(400, Math.min(800, startHeight - deltaY));
               break;
-            case 'bottom-right':
-              newWidth = Math.max(300, Math.min(800, startWidth + deltaX));
+            case 'bottom':
               newHeight = Math.max(400, Math.min(800, startHeight + deltaY));
               break;
           }

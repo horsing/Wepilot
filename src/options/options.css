@@ -120,7 +120,6 @@ body {
 
 .section {
   display: none;
-  max-width: 600px;
 }
 
 .section.active {
